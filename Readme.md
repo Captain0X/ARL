@@ -26,6 +26,7 @@ ARL删库后，备份项目使用到ARL-NPoC、arl_files等项目，无法跑通
 13. 使用cloudflare代理docker官方源(因为总所周知的原因，docker源目前国内用不了)
 
 ### 系统要求
+如遇到docker镜像源问题：https://blog.csdn.net/qq_40258748/article/details/139155868#/
 
 建议采用**Docker内源码安装**或**Docker内源码安装**方式运行。系统配置建议：CPU:4线程 内存:8G 带宽:10M。
 由于自动资产发现过程中会有大量的的发包，建议采用云服务器可以带来更好的体验。
@@ -44,6 +45,14 @@ cd /etc/systemd/system && systemctl restart arl*
 exit
 ```
 如遇mongod服务问题导致`timeout of 12000ms exceeded`，请尝试在docker启动中加入路径`-v /sys/fs/cgroup:/sys/fs/cgroup`
+
+### 如果遇到`timeout of 12000ms exceeded`
+```
+先把站删了
+docker stop arl && docker rm arl
+然后执行
+docker run --privileged -d  -p 5003:5003   --name=arl  --restart=always   -v /sys/fs/cgroup:/sys/fs/cgroup  docker.adysec.com/adysec/arl   /usr/sbin/init
+```
 
 ### Docker 内源码安装（最新版，需要为境外网络环境，且网络稳定）
 
@@ -105,6 +114,14 @@ docker rmi arl
 # 改poc，poc位置/opt/ARL-NPoC
 docker exec -it arl bash
 systemctl restart arl*
+
+#添加fofa或者邮箱通知配置
+docker exec -it arl bash
+配置好之后重启下所有服务
+systemctl restart arl*
+
+编辑配置文件即可
+vi /opt/ARL/app/config.yaml
 
 # 改指纹，/opt/ARL/tools/指纹数据.json
 docker exec -it arl bash
