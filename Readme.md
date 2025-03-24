@@ -113,15 +113,18 @@ docker rmi arl
 
 # 改poc，poc位置/opt/ARL-NPoC
 docker exec -it arl bash
-systemctl restart arl*
+
 
 #添加fofa或者邮箱通知配置
 docker exec -it arl bash
 配置好之后重启下所有服务
-systemctl restart arl*
+cd /etc/systemd/system && systemctl restart arl*
 
 编辑配置文件即可
 vi /opt/ARL/app/config.yaml
+
+# 更新nuclei poc
+cd /opt/ARL/tools && python3.6 nuclei_download.py
 
 # 改指纹，/opt/ARL/tools/指纹数据.json
 docker exec -it arl bash
